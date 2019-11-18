@@ -10,18 +10,20 @@ String[] directions={"N","E","S","W"};
 
 class Map{
   PApplet p;
-  color bgColor=color(128);
+  PImage grand;
   Object home;
   Item[] items=new Item[4];
   Road[] roads=new Road[4];
   Map(PApplet _p){
+    String[] grandcolors={"green","red"};
+    grand=loadImage("img/grand_"+grandcolors[(int)random(grandcolors.length)]+".png");
     p=_p;
     width=p.width;
     height=p.height;
     cell=width/split;
-    bgColor=color(random(360),50,90);
     
-    home=new Object("home",new PVector(cell,cell),new PVector(cell,cell));
+    String[] housecolors={"blue","red","green"};
+    home=new Object("home_"+housecolors[(int)random(housecolors.length)],new PVector(cell,cell),new PVector(cell,cell));
     
     int num0=(int)random(directions.length);
     roads[0]=new Road(directions[num0]);
@@ -31,7 +33,7 @@ class Map{
     
   }//Map constructor  
   void draw(){
-    p.fill(bgColor);p.noStroke();p.rect(0,0,width,height);noFill();
+    p.image(grand,0,0,width,height);
     
     p.stroke(0);p.strokeWeight(1);
     for(int w=0;w<width;w+=width/split)p.line(w,0,w,height);
