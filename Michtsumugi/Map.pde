@@ -1,4 +1,3 @@
-//
 //Application 
 //piece of processing function is need "p." before this.
 //(rect,line,stroke,image...)

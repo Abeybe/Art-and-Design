@@ -10,11 +10,10 @@ void setup(){
   surface.setVisible(false);
   colorMode(HSB,360,100,100,100);
   
-  String[] args={"Taro"};
-  PApplet screen1=new Screen();
+  String[] args={"Screen"};
+  PApplet screen1=new Screen("Taro");
   PApplet.runSketch(args,screen1);
-  args[0]="Jiro";
-  PApplet screen2=new Screen();
+  PApplet screen2=new Screen("Jiro");
   PApplet.runSketch(args,screen2);
 }//setup
 
