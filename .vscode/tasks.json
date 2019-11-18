@@ -3,11 +3,11 @@
     "tasks": [
       {
         "label": "Run",
-        "command":"C:\\processing-3.5.3\\processing-java",
+        "command":"C:\\processing-3.5.3\\processing-java.exe",
         "type": "process",
         "args": [
           "--force",
-          "--sketch=C:\\Users\\1718005\\Documents\\GitHub\\MichiTsumugi",
+          "--sketch=${fileDirname}",
           "--run"
         ],
         "group": {
