@@ -7,7 +7,7 @@
         "type": "process",
         "args": [
           "--force",
-          "--sketch=${workspaceRoot}",
+          "--sketch=C:\\Users\\1718005\\Documents\\GitHub\\MichiTsumugi",
           "--run"
         ],
         "group": {
