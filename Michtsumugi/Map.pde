@@ -51,7 +51,8 @@ class Map{
       pos=new PVector(2*cell,2*cell);
       switch(dir){
         case "N":
-          size=new PVector(cell,-2*cell);
+          pos.add(0,cell);
+          size=new PVector(cell,-3*cell);
         break;
         case "E":
           size=new PVector(-2*cell,cell);
@@ -60,7 +61,8 @@ class Map{
           size=new PVector(cell,6*cell*height/width);
         break;
         case "W":
-          size=new PVector(-2*cell,cell);
+          pos.add(cell,0);
+          size=new PVector(-3*cell,cell);
         break;
         default:break;
       }
