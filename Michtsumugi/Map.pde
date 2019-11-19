@@ -49,7 +49,6 @@ class Map{
   class Road extends Object{
     Road(String dir){
       super("road",null,null);
-      System.out.print(dir+"\n");
       pos=new PVector(2*cell,2*cell);
       switch(dir){
         case "N":
