@@ -13,6 +13,7 @@ class Map{
   Object home;
   Item[] items=new Item[4];
   Road[] roads=new Road[4];
+  boolean[] cells;//fill cells
   PVector cellNum;
   Map(Screen _p){
     grand=loadImage("img/grand"+"_"+rndStr("red","green")+".png");
@@ -20,7 +21,9 @@ class Map{
     width=p.width;
     height=p.height;
     cell=width/split;
-    cellNum=new PVector(split,split*height/width,split*split*height);
+    cellNum=new PVector(split,split*height/width,split*split*height/width);
+
+    cells=new boolean[(int)cellNum.z];
     
     home=new Object("home",rndStr("red","green","blue"),new PVector(cell,cell),new PVector(cell,cell));
     
@@ -35,7 +38,7 @@ class Map{
     System.out.print(
       "\nuser name : "+p.userName
       +"\nscreen size : "+width+"x"+height
-      +"\ncell number : "+(int)cellNum.x+"x"+(int)cellNum.y+" "+(int)cellNum.z+" cells"
+      +"\ncell number : "+(int)cellNum.x+"x"+(int)cellNum.y+" "+(int)cellNum.z+"cells"
       +"\nhome type : "+home.type
       +"\nroad : "+roads[0].dir+","+roads[1].dir
       +"\ncar position : "+items[0].pos.x+","+items[0].pos.y
@@ -88,6 +91,7 @@ class Map{
   
   class Car extends Item{
     float rot=0;
+    PVector startPos;
     Car(){
       super("car",rndStr("red","green","blue"),null,new PVector(cell/2,cell*3/4));
       switch(roads[0].dir){
@@ -109,16 +113,25 @@ class Map{
         break;
         default:break;
       }
+      startPos=pos.copy();
+    }
+    void move(){
+      pos.add(-sin(rot),cos(rot));
+      if(pos.x<-cell || width+cell<pos.x || pos.y<-cell || height+cell<pos.y)
+        pos=startPos.copy();
     }
     void draw(){
+      move();
+
       p.translate(pos.x+size.x/2,pos.y+size.y/2);
       p.rotate(rot);
+      p.translate(-size.x/2,-size.y/2);
       if(image!=null)p.image(image,0,0,size.x,size.y);
       else{
         fill(0,128);p.rect(0,0,size.x,size.y);noFill();
       }
       p.rotate(-rot);
-      p.translate(-pos.x-size.x/2,-pos.y-size.y/2);
+      p.translate(-pos.x,-pos.y);
     }
   }
 
@@ -151,4 +164,7 @@ class Map{
   String rndStr(String... str){
     return str[(int)random(str.length)];
   } 
+  void fillCells(PVector pos){
+    int n=int(pos.x/cell+width*pos.y/cell);
+  }
 }//Map
