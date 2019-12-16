@@ -60,9 +60,19 @@ class Map{
     for(int i=0;i<items.length && items[i]!=null;i++){
       items[i].draw();
     }
-    
+
+  if(p.keyPressed){
+    for(int i=0;i<cells.length;i++){
+      System.out.print((cells[i])?"1 ":"0 ");
+      if(i%split==split-1)System.out.print("\n");
+    }
+    System.out.print("\n\n");
+  }
+
   }//Map draw
   
+  // inner class
+
   class Road extends Object{
     String dir;
     Road(String _dir){
@@ -86,14 +96,16 @@ class Map{
         break;
         default:break;
       }
+      fillCells(this);      
     }
   }
   
   class Car extends Item{
     float rot=0;
+    float startRot=0;
     PVector startPos;
     Car(){
-      super("car",rndStr("red","green","blue"),null,new PVector(cell/2,cell*3/4));
+      super("car",rndStr("red","green","blue"),null,new PVector(cell,cell));
       switch(roads[0].dir){
         case "N":
           pos=new PVector(2*cell,0);
@@ -113,25 +125,35 @@ class Map{
         break;
         default:break;
       }
-      startPos=pos.copy();
+      startPos=pos.copy();  
+      startRot=rot;    
     }
     void move(){
-      pos.add(-sin(rot),cos(rot));
-      if(pos.x<-cell || width+cell<pos.x || pos.y<-cell || height+cell<pos.y)
+      if(pos.x<-cell || width+cell<pos.x || pos.y<-cell || height+cell<pos.y){
         pos=startPos.copy();
+        rot=startRot;
+      }
+      
+      pos.add(-sin(rot),cos(rot));
+      
+      PVector step=pos.copy().add(-sin(rot),cos(rot));
+      if(pos2cell(step)>=0 && cells[pos2cell(step)]==false){
+        step=pos.copy().add(-sin(rot+PI/2),cos(rot+PI/2));
+        if(pos2cell(step)>=0 && cells[pos2cell(step)]==false)rot+=PI/2;
+        else{
+          step=pos.copy().add(-sin(rot-PI/2),cos(rot-PI/2));
+          if(pos2cell(step)>=0 && cells[pos2cell(step)]==false)rot-=PI/2;
+        }
+      }
     }
     void draw(){
       move();
-
       p.translate(pos.x+size.x/2,pos.y+size.y/2);
       p.rotate(rot);
-      p.translate(-size.x/2,-size.y/2);
       if(image!=null)p.image(image,0,0,size.x,size.y);
       else{
         fill(0,128);p.rect(0,0,size.x,size.y);noFill();
       }
-      p.rotate(-rot);
-      p.translate(-pos.x,-pos.y);
     }
   }
 
@@ -164,7 +186,20 @@ class Map{
   String rndStr(String... str){
     return str[(int)random(str.length)];
   } 
-  void fillCells(PVector pos){
-    int n=int(pos.x/cell+width*pos.y/cell);
+  int pos2cell(PVector pos){
+    int cn=int(pos.x/cell)+split*int(pos.y/cell);
+    return (cn<0 || cellNum.z<=cn)?-1:cn;
+  }
+  PVector cell2pos(int num){
+    return new PVector(num%cellNum.x,num/cellNum.y);
+  }
+  void fillCells(Item item){
+    PVector dir=new PVector((item.size.x>=0)?1:-1,(item.size.y>=0)?1:-1);
+    for(int x=(dir.x>0)?0:-1;(dir.x>0)?x<item.size.x/cell:item.size.x/cell<=x;x+=dir.x){
+      for(int y=(dir.y>0)?0:-1;(dir.y>0)?y<item.size.y/cell:item.size.y/cell<=y;y+=dir.y){
+        int num=int(item.pos.x/cell)+x+split*(int(item.pos.y/cell)+y);
+        if(0<=num && num<cellNum.z)cells[num]=true;
+      }
+    }
   }
 }//Map
